@@ -11,6 +11,7 @@ if not os.path.isfile("db.json"):
     file.write("{}")
     file.close()
 
+print("Loading data...")
 with open("db.json", 'r') as file:
     data = json.loads(file.read())
 print("Data loaded.")
@@ -26,11 +27,11 @@ def process_comment(comment):
         else:
             data[word] += 1
 
-
+print("Gathering comments...")
 comments = r.get_comments(subname, limit=10000)
 if not "last_link_ending" in data.keys():
     data["last_link_ending"] = ""
-print("Comments gathered")
+print("Comments gathered. Now processing...")
 for comment in comments:
     linklist.append(comment.link_id)
     comment.link_id
@@ -39,10 +40,10 @@ for comment in comments:
         break
     process_comment(comment.body.lower())
 
-print("Comments processed")
+print("Comments processed.")
 
 data["last_link_ending"] = linklist[0]
 with open("db.json", 'w') as file:
     json.dump(data, file, indent=4)
 
-print("Saving done.")
+print("Saving done!")
