@@ -1,9 +1,15 @@
 import praw
 import re
 import json
+import os
 
 r = praw.Reddit("zipf")
 subname = "all"
+
+if not os.path.isfile("db.json"):
+    file = open("db.json", 'w')
+    file.write("{}")
+    file.close()
 
 with open("db.json", 'r') as file:
     data = json.loads(file.read())
@@ -22,6 +28,8 @@ def process_comment(comment):
 
 
 comments = r.get_comments(subname, limit=10000)
+if not "last_link_ending" in data.keys():
+    data["last_link_ending"] = ""
 print("Comments gathered")
 for comment in comments:
     linklist.append(comment.link_id)
